@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    font-family: theme('fontFamily.body');
+    color: #1f2933;
+    background-color: theme('colors.sable.100');
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: theme('fontFamily.heading');
+  }
+}
+
+@layer utilities {
+  .container-page {
+    @apply max-w-6xl mx-auto px-4;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-terracotta-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-terracotta-500/25 transition hover:bg-terracotta-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-500 focus-visible:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-full border border-menthe-500 px-5 py-2.5 text-sm font-semibold text-menthe-600 bg-white/80 backdrop-blur-sm transition hover:bg-menthe-500 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-menthe-500 focus-visible:ring-offset-2;
+  }
+
+  .card-sable {
+    @apply rounded-2xl bg-sable-100/80 shadow-card border border-sable-200/70;
+  }
+}
+
