@@ -7,6 +7,7 @@ import Products from './pages/Products'
 import ProductDetail from './pages/ProductDetail'
 import Cart from './pages/Cart'
 import Login from './pages/Login'
+import Admin from './pages/Admin'
 import { useAuth } from './context/AuthContext'
 
 function PrivateRoute() {
@@ -26,6 +27,7 @@ function App() {
             <Route path="/a-propos" element={<About />} />
             <Route path="/products" element={<Products />} />
             <Route path="/products/:id" element={<ProductDetail />} />
+            <Route path="/admin" element={<Admin />} />
             <Route element={<PrivateRoute />}>
               <Route path="/cart" element={<Cart />} />
             </Route>

@@ -1,40 +1,33 @@
-import api from './api'
+import api from './api';
 
-export async function login(email, password) {
-  // Mocked auth for demo: accept any non-empty email/password
-  if (!import.meta.env.VITE_API_URL) {
-    if (!email || !password) {
-      throw new Error('Email et mot de passe requis')
-    }
-    const user = {
-      id: 1,
-      name: email.split('@')[0] || 'Client',
-      email,
-    }
-    const token = 'mock-token-artisanat-maroc'
-    return { user, token }
-  }
+export const login = async (email, password) => {
+  const response = await api.post('/api/auth/login', { 
+    email, 
+    password 
+  });
+  localStorage.setItem('token', response.data.token);
+  localStorage.setItem('user', JSON.stringify(response.data.user));
+  return response.data;
+};
 
-  const response = await api.post('/api/auth/login', { email, password })
-  return response.data
-}
+export const register = async (name, email, password) => {
+  const response = await api.post('/api/auth/register', { 
+    name, 
+    email, 
+    password 
+  });
+  localStorage.setItem('token', response.data.token);
+  localStorage.setItem('user', JSON.stringify(response.data.user));
+  return response.data;
+};
 
-export async function register(name, email, password) {
-  if (!import.meta.env.VITE_API_URL) {
-    if (!name || !email || !password) {
-      throw new Error('Tous les champs sont requis')
-    }
-    const user = { id: Date.now(), name, email }
-    const token = 'mock-token-artisanat-maroc'
-    return { user, token }
-  }
+export const logout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  window.location.href = '/';
+};
 
-  const response = await api.post('/api/auth/register', { name, email, password })
-  return response.data
-}
-
-export function logout() {
-  localStorage.removeItem('token')
-  localStorage.removeItem('user')
-}
-
+export const getCurrentUser = () => {
+  const user = localStorage.getItem('user');
+  return user ? JSON.parse(user) : null;
+};

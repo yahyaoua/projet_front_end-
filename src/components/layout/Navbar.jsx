@@ -21,10 +21,7 @@ export default function Navbar() {
     <header className="fixed inset-x-0 top-0 z-40 border-b border-sable-200 bg-sable-100/95 backdrop-blur shadow-md">
       <nav className="container-page flex h-16 items-center justify-between">
         <div className="flex items-center gap-8">
-          <Link
-            to="/"
-            className="flex items-center gap-2 group"
-          >
+          <Link to="/" className="flex items-center gap-2 group">
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-terracotta-500 text-white shadow-card">
               <span className="text-lg font-heading">A</span>
             </div>
@@ -48,6 +45,11 @@ export default function Navbar() {
             <NavLink to="/a-propos" className={navLinkClasses}>
               À propos
             </NavLink>
+            {user?.role === 'admin' && (
+              <NavLink to="/admin" className="text-sm font-medium text-terracotta-600 hover:text-terracotta-500 transition-colors">
+                Admin
+              </NavLink>
+            )}
           </div>
         </div>
 
@@ -100,27 +102,24 @@ export default function Navbar() {
       {open && (
         <div className="border-t border-sable-200 bg-sable-100/95 md:hidden">
           <div className="container-page flex flex-col gap-3 py-3 pb-4">
-            <NavLink
-              to="/"
-              onClick={() => setOpen(false)}
-              className={navLinkClasses}
-            >
+            <NavLink to="/" onClick={() => setOpen(false)} className={navLinkClasses}>
               Accueil
             </NavLink>
-            <NavLink
-              to="/products"
-              onClick={() => setOpen(false)}
-              className={navLinkClasses}
-            >
+            <NavLink to="/products" onClick={() => setOpen(false)} className={navLinkClasses}>
               Produits
             </NavLink>
-            <NavLink
-              to="/a-propos"
-              onClick={() => setOpen(false)}
-              className={navLinkClasses}
-            >
+            <NavLink to="/a-propos" onClick={() => setOpen(false)} className={navLinkClasses}>
               À propos
             </NavLink>
+            {user?.role === 'admin' && (
+              <NavLink
+                to="/admin"
+                onClick={() => setOpen(false)}
+                className="text-sm font-medium text-terracotta-600"
+              >
+                Admin
+              </NavLink>
+            )}
             {!isAuthenticated && (
               <Link
                 to="/login"
@@ -136,4 +135,3 @@ export default function Navbar() {
     </header>
   )
 }
-

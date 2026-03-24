@@ -1,12 +1,51 @@
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import CartItem from '../components/cart/CartItem'
 import { useCartContext } from '../context/CartContext'
+import api from '../services/api'
 
 export default function Cart() {
   const { items, total, clearCart } = useCartContext()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const navigate = useNavigate()
 
   const shipping = items.length > 0 ? 60 : 0
   const grandTotal = total + shipping
+
+  const handleOrder = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+
+      const orderItems = items.map((item) => ({
+        product: item._id || item.id,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        image: item.image
+      }))
+
+      await api.post('/api/orders', {
+        items: orderItems,
+        totalPrice: grandTotal,
+        shippingAddress: {
+          name: 'Client',
+          phone: '0600000000',
+          city: 'Marrakech',
+          address: 'Adresse par défaut'
+        }
+      })
+
+      clearCart()
+      alert('Commande passée avec succès !')
+      navigate('/')
+    } catch (err) {
+      setError('Erreur lors de la commande. Veuillez vous connecter.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="grid gap-10 lg:grid-cols-[minmax(0,2fr),minmax(0,1.1fr)]">
@@ -78,16 +117,21 @@ export default function Cart() {
               </span>
             </div>
           </div>
+
+          {error && (
+            <p className="mt-3 text-xs text-red-500">{error}</p>
+          )}
+
           <button
             type="button"
-            disabled={items.length === 0}
+            onClick={handleOrder}
+            disabled={items.length === 0 || loading}
             className="btn-primary mt-5 w-full justify-center disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Passer la commande
+            {loading ? 'Traitement...' : 'Passer la commande'}
           </button>
         </div>
       </aside>
     </div>
   )
 }
-

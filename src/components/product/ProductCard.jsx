@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { useCartContext } from '../../context/CartContext'
 import MiroirFormModal from '../ui/MiroirFormModal'
 
+const API_URL = import.meta.env.VITE_API_URL
+
 export default function ProductCard({ product }) {
   const { addItem } = useCartContext()
   const [miroirOpen, setMiroirOpen] = useState(false)
@@ -15,7 +17,7 @@ export default function ProductCard({ product }) {
       <article className="card-sable flex flex-col overflow-hidden bg-gradient-to-br from-sable-100 to-sable-200/60">
         <div className="relative overflow-hidden bg-sable-200">
           <img
-            src={product.image}
+            src={product.image ? `${API_URL}/${product.image}` : '/placeholder.jpg'}
             alt={product.name}
             className="aspect-square w-full object-cover transition duration-500 hover:scale-105"
           />
@@ -33,12 +35,20 @@ export default function ProductCard({ product }) {
           <p className="text-xs font-medium uppercase tracking-[0.16em] text-slate-500">
             {product.artisan}
           </p>
+
+          {/* ── Description ── */}
+          {product.description && (
+            <p className="text-sm text-slate-600 line-clamp-2">
+              {product.description}
+            </p>
+          )}
+
           <p className="mt-2 text-lg font-semibold text-terracotta-600">
             {product.price.toLocaleString('fr-MA')} MAD
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <Link
-              to={`/products/${product.id}`}
+              to={`/products/${product._id}`}
               className="btn-secondary text-xs"
             >
               Voir le produit
@@ -66,4 +76,3 @@ export default function ProductCard({ product }) {
     </>
   )
 }
-
