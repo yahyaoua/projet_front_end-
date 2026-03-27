@@ -17,7 +17,7 @@ export default function ProductCard({ product }) {
       <article className="card-sable flex flex-col overflow-hidden bg-gradient-to-br from-sable-100 to-sable-200/60">
         <div className="relative overflow-hidden bg-sable-200">
           <img
-            src={product.image ? `${API_URL}/${product.image}` : '/placeholder.jpg'}
+            src={product.image || '/placeholder.jpg'}
             alt={product.name}
             className="aspect-square w-full object-cover transition duration-500 hover:scale-105"
           />

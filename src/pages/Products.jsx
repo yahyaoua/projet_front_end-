@@ -7,8 +7,7 @@ const ALL_CATEGORIES = ['Tous', 'Miroir', 'Décoration', 'Cuir']
 export default function Products() {
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('Tous')
-  const { products, loading } = useProducts({ search: '', category: 'Tous' })
-
+  const { products, loading } = useProducts({})
   const filtered = useMemo(() => {
     return products.filter((p) => {
       const matchesCategory = category === 'Tous' || p.category === category

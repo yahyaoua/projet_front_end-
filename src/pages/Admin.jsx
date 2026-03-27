@@ -1,11 +1,16 @@
-import { useEffect, useState } from 'react'
+// --- 1. AJOUT DES IMPORTS NÉCESSAIRES ---
+import { useEffect, useState, useRef } from 'react' // Ajout de useRef
 import { useNavigate } from 'react-router-dom'
 import api from '../services/api'
+import { Upload } from 'lucide-react' // Import d'une icône moderne
 
 const API_URL = import.meta.env.VITE_API_URL
 
 export default function Admin() {
   const navigate = useNavigate()
+  // --- 2. CRÉATION DE LA RÉFÉRENCE POUR L'INPUT CACHÉ ---
+  const fileInputRef = useRef(null) 
+
   const storedUser = JSON.parse(localStorage.getItem('user'))
   const [activeTab, setActiveTab] = useState('produits')
   const [products, setProducts] = useState([])
@@ -29,7 +34,7 @@ export default function Admin() {
     if (!storedUser || storedUser.role !== 'admin') {
       navigate('/')
     }
-  }, [])
+  }, [storedUser, navigate]) // Ajout de dépendances pour useEffect
 
   useEffect(() => {
     fetchData()
@@ -138,6 +143,11 @@ export default function Admin() {
       alert('Erreur lors de la mise à jour')
     }
   }
+
+  // --- 3. FONCTION POUR DÉCLENCHER LE CLIC SUR L'INPUT CACHÉ ---
+  const handleChooseFileClick = () => {
+    fileInputRef.current.click();
+  };
 
   const statusColor = (status) => {
     switch (status) {
@@ -261,28 +271,63 @@ export default function Admin() {
               />
             </div>
 
-            {/* ── Champ image ── */}
+            {/* ── Champ image : STYLISATION ICI ── */}
             <div className="md:col-span-2">
               <label className="text-xs text-slate-500">Image du produit</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files[0]
-                  if (file) {
-                    setImageFile(file)
-                    setImagePreview(URL.createObjectURL(file))
-                  }
-                }}
-                className="w-full mt-1 rounded-lg border border-sable-200 px-3 py-2 text-sm"
-              />
-              {imagePreview && (
-                <img
-                  src={imagePreview}
-                  alt="Aperçu"
-                  className="mt-2 h-32 w-32 object-cover rounded-lg border border-sable-200"
+              
+              {/* Conteneur pour le bouton stylisé et l'aperçu */}
+              <div className="mt-2 flex items-center gap-4">
+                
+                {/* --- 4. LE NOUVEAU BOUTON STYLISÉ (Utilise un LABEL pour déclencher le clic) --- */}
+                <button
+                  type="button"
+                  onClick={handleChooseFileClick}
+                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium border rounded-full transition duration-300
+                    bg-white border-sable-300 text-slate-700 hover:border-terracotta-300 hover:text-terracotta-700 shadow-sm"
+                >
+                  <Upload className="w-4 h-4" /> {/* Icône moderne */}
+                  {imageFile ? 'Changer l\'image' : 'Choisir une image'}
+                </button>
+
+                {/* --- 5. L'INPUT DE FICHIER RÉEL CACHÉ (Accessible via useRef) --- */}
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef} // Lien avec useRef
+                  onChange={(e) => {
+                    const file = e.target.files[0]
+                    if (file) {
+                      setImageFile(file)
+                      setImagePreview(URL.createObjectURL(file))
+                    }
+                  }}
+                  className="sr-only" // CLASSE TAILWIND POUR CACHER VISUELLEMENT (Screen Reader Only)
                 />
-              )}
+
+                {/* Aperçu amélioré */}
+                {imagePreview && (
+                  <div className="relative group">
+                    <img
+                      src={imagePreview}
+                      alt="Aperçu"
+                      className="h-16 w-16 object-cover rounded-xl border border-sable-200 shadow-inner"
+                    />
+                    {/* Optionnel : Bouton pour enlever l'image (Plus propre) */}
+                    <button
+                        onClick={() => { setImageFile(null); setImagePreview(''); fileInputRef.current.value = ''; }}
+                        className="absolute -top-1.5 -right-1.5 p-0.5 bg-red-100 text-red-700 rounded-full opacity-0 group-hover:opacity-100 transition duration-150"
+                        title="Enlever l'image"
+                    >
+                        &times;
+                    </button>
+                  </div>
+                )}
+                
+                {/* Texte d'information si aucune image n'est choisie */}
+                {!imageFile && !imagePreview && (
+                    <span className="text-xs text-slate-400">Aucun fichier choisi</span>
+                )}
+              </div>
             </div>
 
             <div className="flex items-center gap-2">

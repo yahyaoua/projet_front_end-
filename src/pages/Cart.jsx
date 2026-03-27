@@ -41,7 +41,15 @@ export default function Cart() {
       alert('Commande passée avec succès !')
       navigate('/')
     } catch (err) {
-      setError('Erreur lors de la commande. Veuillez vous connecter.')
+      // --- MODIFICATION ICI : On récupère le message d'erreur du backend ---
+      const backendMessage = err.response?.data?.message 
+      
+      if (backendMessage) {
+        // Affiche "Stock insuffisant pour..." ou tout autre message envoyé par le serveur
+        setError(backendMessage) 
+      } else {
+        setError('Une erreur est survenue. Vérifiez votre connexion ou assurez-vous d’être connecté.')
+      }
     } finally {
       setLoading(false)
     }
@@ -118,8 +126,13 @@ export default function Cart() {
             </div>
           </div>
 
+          {/* Affichage de l'erreur dynamique */}
           {error && (
-            <p className="mt-3 text-xs text-red-500">{error}</p>
+            <div className="mt-4 p-3 bg-red-50 border border-red-100 rounded-lg">
+              <p className="text-xs font-bold text-red-600">
+                ⚠️ {error}
+              </p>
+            </div>
           )}
 
           <button
@@ -128,7 +141,7 @@ export default function Cart() {
             disabled={items.length === 0 || loading}
             className="btn-primary mt-5 w-full justify-center disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {loading ? 'Traitement...' : 'Passer la commande'}
+            {loading ? 'Vérification...' : 'Passer la commande'}
           </button>
         </div>
       </aside>

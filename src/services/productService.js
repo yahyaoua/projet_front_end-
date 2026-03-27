@@ -1,5 +1,15 @@
 import api from './api';
 
+const BASE_URL = 'http://localhost:8000';
+
+const formatImage = (image) => {
+  if (!image) return null
+  if (image.startsWith('http')) return image
+  if (image.startsWith('/images')) return image
+  if (image.startsWith('/src')) return image
+  return `${BASE_URL}/${image}`
+}
+
 export const getProducts = async (filters = {}) => {
   const params = new URLSearchParams();
   
@@ -12,15 +22,25 @@ export const getProducts = async (filters = {}) => {
   }
 
   const response = await api.get(`/api/products?${params}`);
-  return response.data;
+  return response.data.map((p) => ({
+    ...p,
+    image: formatImage(p.image)
+  }));
 };
 
 export const getProductById = async (id) => {
   const response = await api.get(`/api/products/${id}`);
-  return response.data;
+  const p = response.data;
+  return {
+    ...p,
+    image: formatImage(p.image)
+  };
 };
 
 export const getFeaturedProducts = async () => {
   const response = await api.get('/api/products?featured=true');
-  return response.data;
+  return response.data.map((p) => ({
+    ...p,
+    image: formatImage(p.image)
+  }));
 };

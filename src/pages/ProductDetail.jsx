@@ -24,7 +24,7 @@ export default function ProductDetail() {
         if (isMounted) {
           setProduct(p)
           setRelated(
-            featured.filter((item) => item.id !== p.id).slice(0, 3),
+            featured.filter((item) => item._id !== p._id).slice(0, 3),
           )
         }
       } finally {
