@@ -67,7 +67,7 @@ export default function Footer() {
           <ul className="space-y-1 text-sm text-slate-600">
             <li>Marrakech, Maroc</li>
             <li>Email : contact@artistiquemachine.com</li>
-            <li>Tél : +212 6 00 00 00 00</li>
+            <li>Tél : +212 6 58772808</li>
           </ul>
         </div>
 

@@ -14,8 +14,13 @@ export default function Navbar() {
     navigate('/')
   }
 
-  const navLinkClasses =
-    'text-sm font-medium tracking-wide text-slate-700 hover:text-terracotta-600 transition-colors'
+  // ✅ Gestion du lien actif
+  const navLinkClasses = ({ isActive }) =>
+    `text-sm font-medium tracking-wide transition-colors ${
+      isActive
+        ? 'text-terracotta-600 border-b-2 border-terracotta-600'
+        : 'text-slate-700 hover:text-terracotta-600'
+    }`
 
   return (
     <header className="fixed inset-x-0 top-0 z-40 border-b border-sable-200 bg-sable-100/95 backdrop-blur shadow-md">
@@ -36,17 +41,20 @@ export default function Navbar() {
           </Link>
 
           <div className="hidden items-center gap-6 md:flex">
-            <NavLink to="/" className={navLinkClasses}>
+            <NavLink to="/" end className={navLinkClasses}>
               Accueil
             </NavLink>
+
             <NavLink to="/products" className={navLinkClasses}>
               Produits
             </NavLink>
+
             <NavLink to="/a-propos" className={navLinkClasses}>
               À propos
             </NavLink>
+
             {user?.role === 'admin' && (
-              <NavLink to="/admin" className="text-sm font-medium text-terracotta-600 hover:text-terracotta-500 transition-colors">
+              <NavLink to="/admin" className={navLinkClasses}>
                 Admin
               </NavLink>
             )}
@@ -102,24 +110,28 @@ export default function Navbar() {
       {open && (
         <div className="border-t border-sable-200 bg-sable-100/95 md:hidden">
           <div className="container-page flex flex-col gap-3 py-3 pb-4">
-            <NavLink to="/" onClick={() => setOpen(false)} className={navLinkClasses}>
+            <NavLink to="/" end onClick={() => setOpen(false)} className={navLinkClasses}>
               Accueil
             </NavLink>
+
             <NavLink to="/products" onClick={() => setOpen(false)} className={navLinkClasses}>
               Produits
             </NavLink>
+
             <NavLink to="/a-propos" onClick={() => setOpen(false)} className={navLinkClasses}>
               À propos
             </NavLink>
+
             {user?.role === 'admin' && (
               <NavLink
                 to="/admin"
                 onClick={() => setOpen(false)}
-                className="text-sm font-medium text-terracotta-600"
+                className={navLinkClasses}
               >
                 Admin
               </NavLink>
             )}
+
             {!isAuthenticated && (
               <Link
                 to="/login"

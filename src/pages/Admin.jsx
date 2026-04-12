@@ -450,6 +450,8 @@ export default function Admin() {
                 <thead>
                   <tr className="border-b border-sable-200 text-left text-slate-500">
                     <th className="pb-3 pr-4">Client</th>
+                    <th className="pb-3 pr-4">Email</th>
+                    <th className="pb-3 pr-4">Phone</th>
                     <th className="pb-3 pr-4">Total</th>
                     <th className="pb-3 pr-4">Date</th>
                     <th className="pb-3 pr-4">Statut</th>
@@ -461,6 +463,12 @@ export default function Admin() {
                     <tr key={order._id}>
                       <td className="py-3 pr-4 font-medium text-slate-900">
                         {order.user?.name || 'Client'}
+                      </td>
+                      <td className="py-3 pr-4 font-medium text-slate-900">
+                        {order.user?.email || 'Client'}
+                      </td>
+                      <td className="py-3 pr-4 font-medium text-slate-900">
+                        {order.shippingAddress?.phone || 'walo'}
                       </td>
                       <td className="py-3 pr-4 text-slate-600">
                         {order.totalPrice} MAD
